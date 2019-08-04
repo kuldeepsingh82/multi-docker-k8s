@@ -3,7 +3,7 @@ kind: Deployment # Kind and name pair define the unique object in K8S
 metadata:
   name: client-deployment # Kind and name pair define the unique object in K8S
 spec:
-  replicas: 3
+  replicas: 1
   selector: 
     matchLabels:
       component: web # Same as lables below
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: client
-          image: kuldeepaujla/multi-docker-client
+          image: kuldeepaujla/multi-docker-client-k8s
           ports:
             - containerPort: 3000

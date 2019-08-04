@@ -1,0 +1,28 @@
+# Run mandatory command for configuration. Read https://kubernetes.github.io/ingress-nginx/deploy/ for more details
+# `kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml`
+# This will deploy the pod (ingress-nginx) along with health check deployment
+
+# For local setup with miniqube make sure you run following command
+# `minikube addons enable ingress`
+
+# Follow the instructions for different cloud providers (AWS, Google Cloud, Azure)
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations: # High level configuration for Ingress service
+    kubernetes.io/ingress.class: nginx # Create nginx controller based on ingress
+    nginx.ingress.kubernetes.io/rewrite-target: /$1 # Configure the rewrite rules
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/?(.*)
+            backend:
+              serviceName: server-cluster-ip-service
+              servicePort: 5000
