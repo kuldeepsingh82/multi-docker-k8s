@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment # Kind and name pair define the unique object in K8S
+metadata:
+  name: client-deployment # Kind and name pair define the unique object in K8S
+spec:
+  replicas: 3
+  selector: 
+    matchLabels:
+      component: web # Same as lables below
+  template:
+    metadata:
+      labels:
+        component: web # Any label as key value pair
+    spec:
+      containers:
+        - name: client
+          image: kuldeepaujla/multi-docker-client
+          ports:
+            - containerPort: 3000
