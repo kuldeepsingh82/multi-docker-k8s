@@ -21,11 +21,11 @@ spec:
             - name: REDIS_HOST
               value: redis-cluster-ip-service
             - name: REDIS_PORT
-              value: 6379
+              value: '6379' # Has to be a String
             - name: PGHOST
               value: postgres-cluster-ip-service
             - name: PGPORT
-              value: 5432
+              value: '5432' # Has to be a String
             - name: PGDATABASE
               value: postgres
             - name: PGUSER
