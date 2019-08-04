@@ -17,3 +17,21 @@ spec:
           image: kuldeepaujla/multi-docker-server
           ports:
             - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: 6379
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGPORT
+              value: 5432
+            - name: PGDATABASE
+              value: postgres
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD 
+              valueFrom: # Value will be stored in K8S Secret object
+                secretKeyRef: # Command to generate `kubectl create secret generic pgpassword --from-literal PGPASSWORD=test123`
+                  name: pgpassword # Name of the secret object created with command mode
+                  key: PGPASSWORD # Referece to specific key inside the secret object

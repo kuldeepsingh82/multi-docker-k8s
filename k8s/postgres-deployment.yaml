@@ -24,4 +24,10 @@ spec:
           volumeMounts: # Define where to mount the volume to store the data
             - name : postgres-storage # Name of the Persistent Volume same as above
               mountPath: /var/lib/postgresql/data # Postgres default data directory
-              subPath: postgres # Required only for postgres 
+              subPath: postgres # Required only for postgres
+          env:
+            - name: PGPASSWORD # This can be used to update the default password of postgress image
+              valueFrom: # Value will be stored in K8S Secret object
+                secretKeyRef: # Command to generate secret `kubectl create secret generic pgpassword --from-literal PGPASSWORD=test123`
+                  name: pgpassword # Name of the secret object created with command mode
+                  key: PGPASSWORD # Referece to specific key inside the secret object
