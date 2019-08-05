@@ -1,0 +1,38 @@
+language: generic
+sudo: required
+services:
+  - docker
+env:
+  global:
+    - GIT_SHA=$(git rev-parse HEAD) # For Image tagging purpose
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Google Cloud CLI prompts disable 
+before_install: # Setup Google Cloud Kubernetes Engine
+  - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d # This is encrypted file 
+  - curl https://sdk.cloud.google.com | bash > /dev/null; # Download & Install Google Cloud SDK to connect with kubernetes cluster 
+  - source $HOME/google-cloud-sdk/path.bash.inc # Setup the shell configuration in travis CI
+  - gcloud components update kubectl # Install kubectl command
+  - gcloud auth activate-service-account --key-file service-account.json # Authorize the Google Cloud SDK to connect with gcloud
+  - gcloud config set project multi-docker-k8s-248915 # Project ID from Google Cloud
+  - gcloud config set compute/zone asia-south1-a 	# Location of the Kubernetes Cluster
+  - gcloud container clusters get-credentials deeps-k8s-cluster1 # Name of the Kubernetes Cluster 
+
+  # Log in to docker hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+
+  # Build the test images of the projects under testing
+  - docker build -t kuldeepaujla/multi-docker-worker-k8s -f ./worker/Dockerfile.dev ./worker
+  - docker build -t kuldeepaujla/multi-docker-server-k8s -f ./server/Dockerfile.dev ./server
+  - docker build -t kuldeepaujla/multi-docker-client-k8s -f ./client/Dockerfile.dev ./client
+
+scripts:
+  # Run the tests on the test builds generated in before_install step
+  - docker run -e CI=true kuldeepaujla/multi-docker-client-k8s npm test
+
+after_success:
+  # Added code in deploy.sh, to ensure environment varaible GIT_SHA is used to tag the docker images
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master # Deploy only if master is modified
