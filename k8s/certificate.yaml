@@ -1,0 +1,21 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: k8s-deepml-in-tls # Any name here
+  namespace: default
+spec:
+  secretName: deepml-in # Domain name here. This is where certificates are stored
+  issuerRef:
+    name: letsencrypt-prod # Use either staging or prod
+    kind: ClusterIssuer
+  commonName: k8s.deepml.in # Common Name of the certifcate
+  dnsNames:
+    - www.k8s.deepml.in # Domains here
+    - k8s.deepml.in
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx # Ingress class used
+        domains:
+          - www.k8s.deepml.in # Same as above
+          - k8s.deepml.in
