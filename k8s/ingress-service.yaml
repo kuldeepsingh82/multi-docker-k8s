@@ -19,11 +19,11 @@ metadata:
 spec:
   tls:
     - hosts: # Routing will be defined for following domains
-        - www.k8s.deeml.in
-        - k8s.deeml.in
+        - www.k8s.deepml.in
+        - k8s.deepml.in
       secretName: deepml-in # Coming from certificate configuration. This is where certificates are stored
   rules:
-    - host: k8s.deeml.in # Routing for 1st domain
+    - host: k8s.deepml.in # Routing for 1st domain
       http:
         paths:
           - path: /?(.*)
@@ -34,7 +34,7 @@ spec:
             backend:
               serviceName: server-cluster-ip-service
               servicePort: 5000
-    - host: www.k8s.deeml.in # Routing for 2nd domain. No other choice have to repeat
+    - host: www.k8s.deepml.in # Routing for 2nd domain. No other choice have to repeat
       http:
         paths:
           - path: /?(.*)
