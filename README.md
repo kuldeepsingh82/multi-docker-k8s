@@ -115,6 +115,22 @@ Get the minikube ip
 Open your browser and test the application with the minikube ip
 
 
+## j. Continuous Development with Skaffold
+
+This will work only if our apps have ability to refresh the changes automatically on any file change. Fortunately, react app refresh itself and nodemon for express also refresh the apps in case of any change. Lets install and configure Skaffold for our development environment
+
+1. Install Skaffold on our local machine (https://skaffold.dev/docs/getting-started/)
+
+	* curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+
+	* chmod +x skaffold
+
+	* sudo mv skaffold /usr/local/bin
+
+2. Verify Skaffold by **skaffold version** command
+3. Create skaffold.yaml configuration file in the project main directory for different projects.
+4. Start skaffold by **skaffold dev**
+
 ## Commonly used minikube commands
 
 	Start minikube

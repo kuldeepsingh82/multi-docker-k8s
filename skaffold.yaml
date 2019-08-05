@@ -1,0 +1,36 @@
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  local:
+    push: false # Do not push the images to docker hub
+  artifacts:
+    - image: kuldeepaujla/multi-docker-client-k8s # Containers to be managed by Skaffold
+      context: client
+      docker:
+        dockerfile: Dockerfile.dev
+      sync: # For any other file changes, Skaffold will fallback to Sync Mode 1.
+        '**/*.js': . # Mode 2 of syncing. Any change in js files will be pushed into our Pod
+        '**/*.css': . # Mode 2 of syncing
+        '**/*.html': . # Mode 2 of syncing
+    - image: kuldeepaujla/multi-docker-server-k8s # Containers to be managed by Skaffold
+      context: server
+      docker:
+        dockerfile: Dockerfile.dev
+      sync: # For any other file changes, Skaffold will fallback to Sync Mode 1.
+        '**/*.js': . # Mode 2 of syncing. Any change in js files will be pushed into our Pod
+        '**/*.css': . # Mode 2 of syncing
+        '**/*.html': . # Mode 2 of syncing
+    - image: kuldeepaujla/multi-docker-worker-k8s # Containers to be managed by Skaffold
+      context: worker
+      docker:
+        dockerfile: Dockerfile.dev
+      sync: # For any other file changes, Skaffold will fallback to Sync Mode 1.
+        '**/*.js': . # Mode 2 of syncing. Any change in js files will be pushed into our Pod
+deploy:
+  kubectl:
+    manifests:
+      - k8s/client-deployment.yaml # This deployment file will be applied to our kubernetes cluster
+      - k8s/server-deployment.yaml # This deployment file will be applied to our kubernetes cluster
+      - k8s/worker-deployment.yaml # This deployment file will be applied to our kubernetes cluster
+      - k8s/server-cluster-ip-service.yaml
+      - k8s/client-cluster-ip-service.yaml
