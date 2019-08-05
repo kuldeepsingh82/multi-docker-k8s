@@ -14,9 +14,28 @@ metadata:
   annotations: # High level configuration for Ingress service
     kubernetes.io/ingress.class: nginx # Create nginx controller based on ingress
     nginx.ingress.kubernetes.io/rewrite-target: /$1 # Configure the rewrite rules
+    certmanager.k8s.io/cluster-issuer: 'letsencrypt-prod' # For HTTPS, The issuer
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true' # Redirect all http requests to https
 spec:
+  tls:
+    - hosts: # Routing will be defined for following domains
+        - www.k8s.deeml.in
+        - k8s.deeml.in
+      secretName: deepml-in # Coming from certificate configuration. This is where certificates are stored
   rules:
-    - http:
+    - host: k8s.deeml.in # Routing for 1st domain
+      http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/?(.*)
+            backend:
+              serviceName: server-cluster-ip-service
+              servicePort: 5000
+    - host: www.k8s.deeml.in # Routing for 2nd domain. No other choice have to repeat
+      http:
         paths:
           - path: /?(.*)
             backend:

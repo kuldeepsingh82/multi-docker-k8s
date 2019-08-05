@@ -3,9 +3,7 @@
 Kubernetes deployment project for multi docker app. The application includes a react application, express back-end, a worker project, Postgres to persist the data and Redis in memory database.
 
 Overall architecture of the application looks like :
-
 ![enter image description here](https://github.com/kuldeepsingh82/multi-docker-k8s/blob/master/docs/images/k8s-arch.jpg)
-
 # # Local setup with minikube
 
 ## a. Installation
@@ -295,4 +293,19 @@ Open your browser and test the application with the Google Cloud Load Balance IP
 
 ## i. Enable SSH (Lets Encrypt)
 
+1. Buy a domain name
+
+2. Configure the domain (along with www), change the DNS configuration to point to google cloud cluster IP (load balancer IP)
+
+3. We will use project named Cert Manager to install the certificates (https://github.com/jetstack/cert-manager)
+
+4. Go to https://docs.cert-manager.io/en/latest/getting-started/install/kubernetes.html and follow the steps defined in section Installing with helm.
+
+5. Create issuer.yaml configuration file, to tell who is the issuer of the certificate (letsencrypt in our case)
+
+6. Create certificate.yaml configuration file (Details about the certificate and domains)
+
+7. Deploy this, to get the certificates.
+
+8. Reconfigure the ingress service configuration file for the https configuration
 
