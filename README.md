@@ -4,7 +4,7 @@ Kubernetes deployment project for multi docker app. The application includes a r
 
 Overall architecture of the application looks like :
 
-
+![enter image description here](https://github.com/kuldeepsingh82/multi-docker-k8s/blob/master/docs/images/k8s-arch.jpg)
 
 # # Local setup with minikube
 
